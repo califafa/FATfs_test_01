@@ -4,6 +4,7 @@
 #include"ff.h"
 #include"myHardware.h"
 
+//<meta charset="GB-2312">
 
 BYTE workSpace[2048]={0};
 
@@ -20,7 +21,7 @@ int main(){
 
     FATFS fs;
 
-    FIL fil={};
+    FIL fil;
 
     unsigned int tmp=0;
     unsigned char *bu;
@@ -65,10 +66,10 @@ int main(){
     res=f_open(&fil,"Ianother3.txt",FA_CREATE_NEW | FA_WRITE);
     res=f_write(&fil,bu,fileLen/4,&tmp);
     f_close(&fil);
-    res=f_open(&fil,"Ianother2.txt",FA_CREATE_NEW | FA_WRITE);
+    res=f_open(&fil,"你Ianother2.txt",FA_CREATE_NEW | FA_WRITE);
     res=f_write(&fil,bu,fileLen/3,&tmp);
     f_close(&fil);
-    res=f_open(&fil,"Ianother1.txt",FA_CREATE_NEW | FA_WRITE);
+    res=f_open(&fil,"我Ianother1.txt",FA_CREATE_NEW | FA_WRITE);
     res=f_write(&fil,bu,fileLen/2,&tmp);
     f_close(&fil);
     res=f_open(&fil,"Ianother0.txt",FA_CREATE_NEW | FA_WRITE);
@@ -94,7 +95,7 @@ int main(){
     res=f_open(&fil,fileName,1);
     printf("f_open(read) result: %d\n\n",res);
     tmp=0;
-    res=f_size(&fil);   //鑾峰彇鏂囦欢闀垮害
+    res=f_size(&fil);   //获取文件长度
     printf("file size  : %d\n\n",res);
     //res=f_read(&fil,br,res,&tmp);
 
@@ -108,7 +109,7 @@ int main(){
     printf("readed byte count: %d\n\n",tmp);
     printf("f_read result: %d\n\n",res);
 
-    f_lseek(&fil,0xFFFFFF); //鏂囦欢鎸囬拡 offset锛歠ile head
+    f_lseek(&fil,0xFFFFFF); //文件指针 offset：file head
 
     res=f_eof(&fil);
 
@@ -144,18 +145,20 @@ int main(){
     DIR dj;
     FILINFO fno;
 
-    f_mkdir("myFolder");
+    f_mkdir("我的myFolder");
 
     fr=f_findfirst(&dj,&fno,"0:/","*");
     //printf("%d\n",fno.fname);
     while(fr==FR_OK&&fno.fname[0]){
-        printf("%s\n",fno.fname);
+        if(fno.fattrib&AM_DIR){ //if is folder
+            printf("%s\n",fno.fname);
+        }
         fr=f_findnext(&dj,&fno);
     }
 
-    printf("\n\nIn folder 'myFolder'\n\n");
+    printf("\n\nIn folder '我的myFolder'\n\n");
 
-    f_chdir("myFolder");
+    f_chdir("我的myFolder");
 //write files
     res=f_open(&fil,"InFolder01.txt",FA_CREATE_NEW | FA_WRITE);
     res=f_write(&fil,bu,fileLen/5,&tmp);
